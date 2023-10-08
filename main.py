@@ -1,39 +1,32 @@
-# This is a sample Python script.
+from flask import Flask, request, jsonify
+from first_app import addNumbers, handle_json
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-# Importing flask module in the project is mandatory
-# An object of Flask class is our WSGI application.
-# from flask import Flask
-#
-# app = Flask(__name__)
-#
-# # The route() function of the Flask class is a decorator,
-# # which tells the application which URL should call
-# # the associated function.
-# @app.route('/displayContent')
-# # ‘/’ URL is bound with hello_world() function.
-# def hello_world():
-# 	return 'Hello World'
-#
-# # main driver function
-# if __name__ == '__main__':
-#
-# 	# run() method of Flask class runs the application
-# 	# on the local development server.
-# 	app.run()
+app = Flask(__name__)
 
 
+@app.route('/')
+def hello_world():
+    return 'Hello World!!!'
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+@app.route('/home')
+def display_home():
+    return 'home content!'
 
 
-# Press the green button in the gutter to run the script.
+@app.route('/add', methods=['POST'])
+def add():
+    numbers = request.json
+    result = addNumbers(numbers['num1'], numbers['num2'])
+    return jsonify({'result': f'Sum of two numbers is {result}'})
+
+
+@app.route('/authorise', methods=['POST'])
+def authorise():
+    data = request.json
+    result = handle_json(data['name'], data['age'])
+    return result
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    app.run(host='0.0.0.0', port=5000)
